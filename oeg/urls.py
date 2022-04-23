@@ -24,8 +24,13 @@ from . import views
 class CaptureSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Capture
-        fields = ['location_code']
-
+        fields = [
+            'location_code', 
+            'front_pic_url', 
+            'back_pic_url',
+            'back_count', 
+            'happy', 
+            'timestamp']
 # ViewSets define the view behavior.
 class CapturesViewSet(viewsets.ModelViewSet):
     queryset = Capture.objects.all()
