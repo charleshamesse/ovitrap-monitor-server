@@ -27,6 +27,7 @@ class CaptureSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'location_code', 
             'front_pic_url', 
+            'front_count', 
             'back_pic_url',
             'back_count', 
             'happy', 
