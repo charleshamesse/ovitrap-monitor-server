@@ -8,7 +8,7 @@ from django.http import HttpResponse
 def sign_s3(request):    
     S3_BUCKET = os.environ.get('S3_BUCKET')
 
-    file_name =  request.args.get('file_name')
+    file_name =  request.GET.get('file_name')
     file_type = "image/jpeg" # request.args.get('file_type')
 
     s3 = boto3.client('s3')
