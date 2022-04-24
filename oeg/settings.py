@@ -145,6 +145,6 @@ REST_FRAMEWORK = {
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
-    "https://ovitrap-egg-counter.netlify.app/",
+    "https://ovitrap-egg-counter.netlify.app",
     "http://localhost:8080",
 ]
