@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from captures.models import Capture 
+
+admin.site.register(Capture)
