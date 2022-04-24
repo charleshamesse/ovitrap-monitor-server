@@ -1,5 +1,6 @@
 import os
 import boto3 
+from botocore.client import Config
 import json
 
 from django.shortcuts import render        
