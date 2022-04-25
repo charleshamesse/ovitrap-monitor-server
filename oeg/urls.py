@@ -26,12 +26,17 @@ class RecordSerializer(serializers.HyperlinkedModelSerializer):
         model = Record
         fields = [
             'location_code', 
+            'location_gps_lat', 
+            'location_gps_lon', 
             'front_pic_url', 
             'front_count', 
             'back_pic_url',
             'back_count', 
             'happy', 
-            'timestamp']
+            'timestamp',
+            'phone_info',
+            'username']
+
 # ViewSets define the view behavior.
 class RecordViewSet(viewsets.ModelViewSet):
     queryset = Record.objects.all()
