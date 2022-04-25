@@ -16,14 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from captures.models import Capture
+from captures.models import Record
 from rest_framework import routers, serializers, viewsets
 from . import views
 
 # Serializers define the API representation.
-class CaptureSerializer(serializers.HyperlinkedModelSerializer):
+class RecordSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Capture
+        model = Record
         fields = [
             'location_code', 
             'front_pic_url', 
@@ -33,13 +33,13 @@ class CaptureSerializer(serializers.HyperlinkedModelSerializer):
             'happy', 
             'timestamp']
 # ViewSets define the view behavior.
-class CapturesViewSet(viewsets.ModelViewSet):
-    queryset = Capture.objects.all()
-    serializer_class = CaptureSerializer
+class RecordViewSet(viewsets.ModelViewSet):
+    queryset = Record.objects.all()
+    serializer_class = RecordSerializer
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'captures', CapturesViewSet)
+router.register(r'records', RecordViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

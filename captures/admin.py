@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from captures.models import Capture 
+from captures.models import Record 
 
-admin.site.register(Capture)
+admin.site.register(Record)

@@ -1,5 +1,10 @@
 # Ovitrap Egg Counter - Server app
 
+## Suggestions
+- [ ] capture -> record
+- [ ] app compartiments for different regions 
+- [ ] record model: add user, country, postal code 
+
 ## Remarks
 - Deploying on Heroku with Conda: needed to install pip through conda then "pip list --format=freeze > requirements.txt"
 - Heroku's free PostreSQL plan: 10k rows, 1GB max
