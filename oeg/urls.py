@@ -25,6 +25,7 @@ class RecordSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Record
         fields = [
+            'uuid',
             'location_code', 
             'location_gps_lat', 
             'location_gps_lon', 
