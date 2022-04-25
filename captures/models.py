@@ -2,7 +2,7 @@ from django.db import models
 
 class Record(models.Model):
     # uuid
-    uuid = models.CharField(max_length=100)
+    uuid = models.CharField(max_length=100, null=True)
 
     # location
     location_code = models.CharField(max_length=100)
