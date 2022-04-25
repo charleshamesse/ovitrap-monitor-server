@@ -14,3 +14,4 @@
 - should allow to flag captures for deletion
 - S3 bucket: objects are currently public. should edit CORS policy to include only this app's domain name
 - Netlify and Heroku are great
+- App name is  "captures" as a leftover from previous naming but it should not be a problem. Model name is now "Record"
