@@ -51,5 +51,10 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('sign_s3', views.sign_s3),
-    path('api-auth/', include('rest_framework.urls'))
+    path('api-auth/', include('rest_framework.urls')),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('session/', views.session_view, name='session'),
+    path('whoami/', views.whoami_view, name='whoami'),
+    path('get_csrf_token/', views.get_csrf, name='get_csrf_token'),
 ]
