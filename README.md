@@ -4,6 +4,7 @@
 - [x] capture -> record
 - [ ] app compartiments for different regions 
 - [ ] record model: add user, country, postal code 
+- [ ] In Record model, swap username with user_id
 
 ## What needs to be done 
 - Auth using https://testdriven.io/blog/django-spa-auth/
