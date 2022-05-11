@@ -15,9 +15,13 @@ idna==3.3
 importlib-metadata==4.11.3
 jmespath==0.10.0
 Markdown==3.3.6
+numpy==1.22.3
+opencv-python-headless==4.5.5.64
+Pillow==9.0.1
 pip==21.2.4
 psycopg2==2.8.6
 pycparser==2.21
+pyheif==0.7.0
 pyOpenSSL==22.0.0
 PySocks==1.7.1
 python-dateutil==2.8.2
