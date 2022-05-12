@@ -63,7 +63,8 @@ def process(request):
 def unload_pic(request):
     pic_url =  str(request.GET.get('pic_url'))
     pic_url = pic_url.split('/')[-1]
-    res = os.remove("./ws/%s" % pic_url)
+    if os.path.exists("./ws/%s" % pic_url): res = os.remove("./ws/%s" % pic_url)
+    else: res = "not found"
             
     return HttpResponse(json.dumps({
         'pic_unload': res
