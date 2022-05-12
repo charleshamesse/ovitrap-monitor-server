@@ -29,6 +29,7 @@ class RecordSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Record
         fields = [
+            'id',
             'uuid',
             'author',
             'processed',
