@@ -178,15 +178,16 @@ class EggCounter():
 
 
         return {
-            # 'outlines': outlines,
+            'outlines': outlines,
             'eggsSingle': singlesCount,
             'eggsInClusters': singlesCalculated,
             'eggsTotal': int(totalEggs),
-            'contoursKept': contoursKept
+            'contoursKept': contoursKept,
+            'threshValue': threshValue
         }
 
     def count_eggs(self, img_stick):
-        threshValues = range(30, 110, 4)
+        threshValues = range(30, 100, 2)
         rets = []
 
         # run computation for each threshold
@@ -210,7 +211,7 @@ class EggCounter():
         # plt.plot(cnts, stds)
         # plt.show()
         return {
-            # 'outlines': rets[std_min_index]["outlines"], # np.hstack([rets[i]["outlines"] for i in range(len(rets))]),
+            'outlines': rets[std_min_index]["outlines"], # np.hstack([rets[i]["outlines"] for i in range(len(rets))]),
             'eggsSingle': rets[std_min_index]["eggsSingle"],
             'eggsInClusters': rets[std_min_index]["eggsInClusters"],
             'eggsTotal': rets[std_min_index]["eggsTotal"],
