@@ -178,7 +178,7 @@ class EggCounter():
 
 
         return {
-            'outlines': outlines,
+            # 'outlines': outlines,
             'eggsSingle': singlesCount,
             'eggsInClusters': singlesCalculated,
             'eggsTotal': int(totalEggs),

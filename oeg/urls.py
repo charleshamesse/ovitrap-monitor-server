@@ -21,6 +21,8 @@ from rest_framework import routers, serializers, viewsets
 from rest_framework.response import Response
 from . import views
 import logging
+import datetime 
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -54,12 +56,24 @@ class RecordViewSet(viewsets.ModelViewSet):
         queryset = Record.objects.all() # self, request, *args, **kwargs)
         author = self.request.GET.get('author')
         processed = self.request.GET.get('processed')
+        date_from = self.request.GET.get('date_from')
+        date_until = self.request.GET.get('date_until')
+        location_code = self.request.GET.get('location_code')
         logging.info(processed)
         logging.info(bool(processed))
         if author is not None:
             queryset = queryset.filter(author=author)
         if processed is not None:
             queryset = queryset.filter(processed=bool(int(processed)))
+        if date_from is not None:
+            date_from_ymd = [int(x) for x in date_from.split('-')]
+            queryset = queryset.filter(timestamp_upload__gte=datetime.date(date_from_ymd[0], date_from_ymd[1], date_from_ymd[2]))
+        if date_until is not None:
+            date_until_ymd = [int(x) for x in date_until.split('-')]
+            queryset = queryset.filter(timestamp_upload__lte=datetime.date(date_until_ymd[0], date_until_ymd[1], date_until_ymd[2]))
+        if location_code is not None:
+            queryset = queryset.filter(location_code=location_code)
+
         # queryset = queryset.filter(processed=False)
         return queryset
     

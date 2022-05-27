@@ -332,3 +332,4 @@ fabric.properties
 
 
 /dev/*
+/ws/*

@@ -1,13 +1,11 @@
 # Ovitrap Egg Counter - Server app
 
-## Suggestions
+## To do 
 - [x] capture -> record
-- [ ] app compartiments for different regions 
-- [ ] record model: add user, country, postal code 
-- [ ] In Record model, swap username with user_id
-
-## What needs to be done 
-- Auth using https://testdriven.io/blog/django-spa-auth/
+- [x] app compartiments for different regions or auth
+- [x] record model: add user, country, postal code 
+- [] In Record model, swap username with user_id
+- [x] Auth using https://testdriven.io/blog/django-spa-auth/
 
 ## Remarks
 - Deploying on Heroku with Conda: needed to install pip through conda then "pip list --format=freeze > requirements.txt"
