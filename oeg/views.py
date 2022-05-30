@@ -45,13 +45,22 @@ def load_pic(request):
     }))  
 
 def process(request):    
-
+    # load request arguments
     pic_url =  str(request.GET.get('pic_url'))
     threshold =  int(request.GET.get('threshold'))
+    bbox = request.GET.get('bbox')
 
+    # load counter and image
     eg = EggCounter()
     image = cv2.imread('./ws/%s' % pic_url)
-    image_stick, _ = eg.find_stick(image)
+
+    if bbox is not None:
+        # if bbox is mentioned, skip finding the bbox
+        top, left, height, width = [int(x) for x in bbox.split(',')]
+        image_stick = image[top:top+height, left:left+width]
+    else:  
+        # else, find the bbox manually
+        image_stick, _ = eg.find_stick(image)
     results = eg.count_eggs_single_thresh(image_stick, threshold)
     # plt.imshow(results['outlines'])
     # plt.show()
