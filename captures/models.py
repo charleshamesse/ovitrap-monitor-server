@@ -23,3 +23,10 @@ class Record(models.Model):
     happy = models.BooleanField(null=True, blank=True)
     timestamp_upload = models.DateTimeField()
     timestamp_process = models.DateTimeField(null=True, blank=True)
+
+class Station(models.Model):
+    code = models.CharField(max_length=100)
+    author = models.CharField(max_length=100)
+    location_gps_lat = models.DecimalField(max_digits=18, decimal_places=15, null=True, blank=True)
+    location_gps_lon = models.DecimalField(max_digits=18, decimal_places=15, null=True, blank=True)
+    

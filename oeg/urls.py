@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from captures.models import Record
+from captures.models import Record, Station
 from rest_framework import routers, serializers, viewsets
 from rest_framework.response import Response
 from . import views
@@ -47,6 +47,16 @@ class RecordSerializer(serializers.HyperlinkedModelSerializer):
             'timestamp_upload',
             'timestamp_process']
 
+class StationSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Station
+        fields = [
+            'id',
+            'author',
+            'code', 
+            'location_gps_lat', 
+            'location_gps_lon']
+
 # ViewSets define the view behavior.
 class RecordViewSet(viewsets.ModelViewSet):
     serializer_class = RecordSerializer
@@ -76,10 +86,24 @@ class RecordViewSet(viewsets.ModelViewSet):
 
         # queryset = queryset.filter(processed=False)
         return queryset
-    
+
+
+class StationViewSet(viewsets.ModelViewSet):
+    serializer_class = StationSerializer
+    queryset = Station.objects.all()
+
+    def get_queryset(self):
+        queryset = Station.objects.all() # self, request, *args, **kwargs)
+        author = self.request.GET.get('author')
+        if author is not None:
+            queryset = queryset.filter(author=author)
+
+        return queryset
+
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'records', RecordViewSet)
+router.register(r'stations', StationViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
