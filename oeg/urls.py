@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from captures.models import Record, Station
 from rest_framework import routers, serializers, viewsets
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from . import views
 import logging
@@ -100,6 +101,29 @@ class StationViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+class StationBatchDelete(APIView):
+    queryset = Station.objects.all()
+
+    def get(self, request):
+        queryset = Station.objects.all() # self, request, *args, **kwargs)
+        author = request.GET.get('author')
+        if author is None:
+            return False
+        queryset = queryset.filter(author=author)
+        queryset.delete()
+        return Response(status=200)
+
+class StationBatchPost(APIView):
+    queryset = Station.objects.all()
+
+    def post(self, request):
+        serializer = StationSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(True, status=201)
+        return Response(serializer.errors, status=400)
+
+
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'records', RecordViewSet)
@@ -118,4 +142,6 @@ urlpatterns = [
     path('session/', views.session_view, name='session'),
     path('whoami/', views.whoami_view, name='whoami'),
     path('get_csrf_token/', views.get_csrf, name='get_csrf_token'),
+    path('station_batch_delete/', StationBatchDelete.as_view(), name='station_batch_delete'),
+    path('station_batch_post/', StationBatchPost.as_view(), name='station_batch_post'),
 ]
