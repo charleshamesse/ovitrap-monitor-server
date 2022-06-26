@@ -35,7 +35,8 @@ def load_pic(request):
 
     if not os.path.exists("./ws"):
         os.makedirs("./ws")
-            
+    
+    pic_url = pic_url.split('/')[-1]
     result = cv2.imwrite("./ws/%s" % pic_url, image)
 
     return HttpResponse(json.dumps({
@@ -47,6 +48,7 @@ def load_pic(request):
 def process(request):    
     # load request arguments
     pic_url =  str(request.GET.get('pic_url'))
+    pic_url = pic_url.split('/')[-1]
     threshold =  int(request.GET.get('threshold'))
     bbox = request.GET.get('bbox')
 

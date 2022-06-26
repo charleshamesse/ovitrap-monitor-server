@@ -89,6 +89,16 @@ class RecordViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class RecordBatchPost(APIView):
+    queryset = Record.objects.all()
+
+    def post(self, request):
+        serializer = RecordSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(True, status=201)
+        return Response(serializer.errors, status=400)
+
 class StationViewSet(viewsets.ModelViewSet):
     serializer_class = StationSerializer
     queryset = Station.objects.all()
@@ -144,4 +154,5 @@ urlpatterns = [
     path('get_csrf_token/', views.get_csrf, name='get_csrf_token'),
     path('station_batch_delete/', StationBatchDelete.as_view(), name='station_batch_delete'),
     path('station_batch_post/', StationBatchPost.as_view(), name='station_batch_post'),
+    path('record_batch_post/', RecordBatchPost.as_view(), name='record_batch_post'),
 ]

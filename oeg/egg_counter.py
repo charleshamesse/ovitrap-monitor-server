@@ -38,8 +38,8 @@ class EggCounter():
 
         # estimate parameters from stick width
         stick_width_px = src.shape[1]
-        egg_length_px = 0.006 * stick_width_px
-        minEggRadius = egg_length_px * .8
+        egg_length_px = 0.006 * stick_width_px# 0.006 * stick_width_px
+        minEggRadius = egg_length_px * .4
         maxEggRadius = egg_length_px * 3
         maxEggCluster = egg_length_px * 5
 
@@ -96,7 +96,7 @@ class EggCounter():
         contoursObject = []
         # print(threshValue, len(contours))
         contoursKept = []
-        for i in range(np.minimum(2500, len(contours))): 
+        for i in range(np.minimum(5000, len(contours))): 
             contoursObject.append(cv2.contourArea(contours[i]))
             # print(np.array(contoursObject))
             contourMax = np.max(np.array(contoursObject))
