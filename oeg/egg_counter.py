@@ -35,13 +35,14 @@ class EggCounter():
     def count_eggs_single_thresh(self, img_stick, threshValue):
         src = img_stick.copy()
         outlines = img_stick.copy()
+        disp = False
 
         # estimate parameters from stick width
         stick_width_px = src.shape[1]
         egg_length_px = 0.006 * stick_width_px# 0.006 * stick_width_px
         minEggRadius = egg_length_px * .4
         maxEggRadius = egg_length_px * 3
-        maxEggCluster = egg_length_px * 5
+        maxEggCluster = egg_length_px * 15
 
         logging.debug("stick width (px): %d" % stick_width_px)
         logging.debug("stick is approx 15mm wide, egg is approx .5mm long")
@@ -55,14 +56,18 @@ class EggCounter():
 
         # Grayscale to Threshold (binary, not adaptive)
         _, threshold = cv2.threshold(gray, threshValue, 255, cv2.THRESH_BINARY)
+        if disp:
+            cv2.imwrite("ws/a-threshold.jpg", threshold)
 
         # Threshold to Dilate [and erode](create new matrix that can be written upon and anchor point (center))
-        dilate = cv2.dilate(threshold, np.ones((3, 3), np.uint8))
+        dilate = cv2.dilate(threshold, np.ones((5, 5), np.uint8))
+        if disp:
+            cv2.imwrite("ws/a-dilate.jpg", dilate)
 
         # DRAW CONTOURS
         # Create matrices to hold contour counts
         # Find contours
-        contours, hierarchy = cv2.findContours(dilate, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         # CALCULATE SINGLE EGGS AND CLUSTERS
         # Initialize and/or reset single and cluster arrays, counts, and area placeholders for computation
@@ -91,12 +96,31 @@ class EggCounter():
 
         # Main loop
         # Max 1000 eggs here
-        disp = False
         dispRemote = True
         contoursObject = []
         # print(threshValue, len(contours))
         contoursKept = []
-        for i in range(np.minimum(5000, len(contours))): 
+        if disp:
+            imgContours = img_stick.copy()
+            imgContoursSelected = img_stick.copy()
+        mask = np.zeros(img_stick.shape[:2], np.uint8)
+
+
+
+        for i in range(np.minimum(10000, len(contours))): 
+            
+            if disp:
+                cv2.drawContours(imgContours, contours, i, contoursColor, 1, 8, hierarchy, 100)
+            # compute mean inside contour and discard if bigger than threshold
+            cv2.drawContours(mask, contours, i, 255, -1)
+            mean = cv2.mean(img_stick, mask=mask)
+            mask = np.zeros(img_stick.shape[:2], np.uint8)
+            if np.mean(mean[:3]) >= threshValue :
+                continue
+            if disp:
+                cv2.drawContours(imgContoursSelected, contours, i, contoursColor, 1, 8, hierarchy, 100)
+                 
+            
             contoursObject.append(cv2.contourArea(contours[i]))
             # print(np.array(contoursObject))
             contourMax = np.max(np.array(contoursObject))
@@ -119,11 +143,11 @@ class EggCounter():
                 detectedObjectsArray.append(boundingBoxes)
                 
                 # filter contours by shape, fit an ellipse (not always possible) to discard some contours
-                if len(contours[i]) > 4:
+                '''if len(contours[i]) > 4:
                     ((x,y), (a,b), theta) = cv2.fitEllipse(contours[i])
                     # outlines = cv2.ellipse(outlines, ((x,y), (a,b), theta), color_cyan, 1)
                     if b <= a*2:
-                        continue
+                        continue'''
 
                 # filter remaining contours by area
                 if cv2.contourArea(contours[i]) <= minEggArea: 
@@ -175,7 +199,10 @@ class EggCounter():
 
         totalEggs = singlesCount + singlesCalculated
 
-
+        if disp:
+            cv2.imwrite("ws/a-contours.jpg", imgContours)
+            cv2.imwrite("ws/a-contours-sel.jpg", imgContoursSelected)
+            cv2.imwrite("ws/a-outlines.jpg", outlines)
 
         return {
             # 'outlines': outlines,
