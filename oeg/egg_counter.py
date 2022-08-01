@@ -8,6 +8,7 @@ class EggCounter():
         logging.info('EggCounter::__init__')
 
     def find_stick(self, img):
+        disp = True
         # equalize
         if False:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb) 
@@ -18,31 +19,47 @@ class EggCounter():
         img_ = img.copy()
         
         img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV) # from BGR to HSV
+        if disp:
+            img = img.copy()
+            cv2.imwrite("ws/fs-1-hsv.jpg", img[:, :, 0] / 255)
         img = cv2.blur(img, (5,5)) # We can have some funny regions if not
         img = cv2.Canny(img,40,45)
+        if disp:
+            cv2.imwrite("ws/fs-2-canny.jpg", img)
         for i in range(5):
             img = cv2.dilate(img, np.ones((10, 10), np.uint8)) 
             img = cv2.erode(img, np.ones((11, 11), np.uint8)) 
+        if disp:
+            cv2.imwrite("ws/fs-3-morph-close.jpg", img)
         img = cv2.blur(img, (15,15)) # We can have some funny regions if not
         _, img = cv2.threshold(img, 200,255,cv2.THRESH_BINARY)
+        if disp:
+            cv2.imwrite("ws/fs-4-thresh.jpg", img)
         
         x,y,w,h = cv2.boundingRect(img) # Not robust to isolated detection
-        # img = cv2.rectangle(img_,(x,y),(x+w,y+h),(255,0,0),3)
+        img = cv2.rectangle(img_,(x,y),(x+w,y+h),(255,0,0),3)
+        if disp:
+            cv2.imwrite("ws/fs-5-rect.jpg", img)
         img_stick = img_[y:y+h, x:x+w]
+        if disp:
+            cv2.imwrite("ws/fs-6-done.jpg", img_stick)
 
         return img_stick, (x,y,w,h)
 
     def count_eggs_single_thresh(self, img_stick, threshValue):
         src = img_stick.copy()
         outlines = img_stick.copy()
-        disp = False
+        disp = True
+        if disp:
+            cv2.imwrite("ws/ec-0-start.jpg", img_stick)
+
 
         # estimate parameters from stick width
         stick_width_px = src.shape[1]
         egg_length_px = 0.006 * stick_width_px# 0.006 * stick_width_px
-        minEggRadius = egg_length_px * .4
+        minEggRadius = egg_length_px * 1
         maxEggRadius = egg_length_px * 3
-        maxEggCluster = egg_length_px * 15
+        maxEggCluster = egg_length_px * 12
 
         logging.debug("stick width (px): %d" % stick_width_px)
         logging.debug("stick is approx 15mm wide, egg is approx .5mm long")
@@ -57,12 +74,12 @@ class EggCounter():
         # Grayscale to Threshold (binary, not adaptive)
         _, threshold = cv2.threshold(gray, threshValue, 255, cv2.THRESH_BINARY)
         if disp:
-            cv2.imwrite("ws/a-threshold.jpg", threshold)
+            cv2.imwrite("ws/ec-1-threshold.jpg", threshold)
 
         # Threshold to Dilate [and erode](create new matrix that can be written upon and anchor point (center))
-        dilate = cv2.dilate(threshold, np.ones((5, 5), np.uint8))
+        '''dilate = cv2.dilate(threshold, np.ones((5, 5), np.uint8))
         if disp:
-            cv2.imwrite("ws/a-dilate.jpg", dilate)
+            cv2.imwrite("ws/a-dilate.jpg", dilate)'''
 
         # DRAW CONTOURS
         # Create matrices to hold contour counts
@@ -80,7 +97,7 @@ class EggCounter():
         clustersTotalArea = 0
 
         # Define colors for contour object detection (boxes) and contour overlay (green=small, blue=single-egg, red=cluster)
-        contoursColor = [255, 255, 255]
+        contoursColor = [255, 0, 0]
         green = [0, 225, 0, 255]
         blue = [0, 0, 225, 200]
         red = [255, 0, 0, 200]
@@ -128,7 +145,7 @@ class EggCounter():
                 # Draw contours and bounding boxes for all objects detected from 'contours' matrix
                 cnt = contours[i]
                 rect_x, rect_y, rect_w, rect_h  = cv2.boundingRect(cnt)
-                objects = cv2.drawContours(dilate, contours, i, contoursColor, 1, 8, hierarchy, 100)
+                objects = cv2.drawContours(threshold, contours, i, contoursColor, 1, 8, hierarchy, 100)
                 point1 = [rect_x - 5, rect_y - 5]
                 point2 = [rect_x + rect_w + 5, rect_y + rect_h + 5]
                 
@@ -200,9 +217,9 @@ class EggCounter():
         totalEggs = singlesCount + singlesCalculated
 
         if disp:
-            cv2.imwrite("ws/a-contours.jpg", imgContours)
-            cv2.imwrite("ws/a-contours-sel.jpg", imgContoursSelected)
-            cv2.imwrite("ws/a-outlines.jpg", outlines)
+            cv2.imwrite("ws/ec-2-contours.jpg", imgContours)
+            cv2.imwrite("ws/ec-3-contours-sel.jpg", imgContoursSelected)
+            cv2.imwrite("ws/ec-4-outlines.jpg", outlines)
 
         return {
             # 'outlines': outlines,
