@@ -8,7 +8,7 @@ class EggCounter():
         logging.info('EggCounter::__init__')
 
     def find_stick(self, img):
-        disp = True
+        disp = False
         # equalize
         if False:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb) 
@@ -49,7 +49,7 @@ class EggCounter():
     def count_eggs_single_thresh(self, img_stick, threshValue):
         src = img_stick.copy()
         outlines = img_stick.copy()
-        disp = True
+        disp = False
         if disp:
             cv2.imwrite("ws/ec-0-start.jpg", img_stick)
 
