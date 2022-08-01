@@ -173,8 +173,8 @@ LOGGING = {
 }
 # CORS
 CORS_ALLOWED_ORIGINS = [
-    "https://ovitrap-egg-counter.netlify.app",
-    "http://localhost:8080",
+    "https://ovitrap-monitor.netlify.app",
+    "http://localhost:8080", # will need to be discarded eventually
 ]
 
 
