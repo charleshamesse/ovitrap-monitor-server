@@ -142,10 +142,10 @@ class EggCounter():
                         cv2.rectangle(objects, point1, point2, green, 3, cv2.LINE_AA, 0)
                 
                 # filter contours by shape, fit an ellipse (not always possible) to discard some candidates
-                if len(contours[i]) > 4:
-                    ((x,y), (a,b), theta) = cv2.fitEllipse(contours[i])
-                    if b <= a*2:
-                        continue
+                #if len(contours[i]) > 4:
+                #    ((x,y), (a,b), theta) = cv2.fitEllipse(contours[i])
+                #    if b <= a*2:
+                #        continue
 
                 # filter remaining contours by area
                 if cv2.contourArea(contours[i]) <= min_egg_area: 
