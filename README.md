@@ -14,6 +14,12 @@ S3_BUCKET=your-WS-S3-bucket-name
 AWS_ACCESS_KEY_ID=your-access-key-id
 AWS_SECRET_ACCESS_KEY=your-AWS-secret-access-key
 ```
+If developing locally, also set those in your environment variables:
+```
+export S3_BUCKET=your-WS-S3-bucket-name
+export AWS_ACCESS_KEY_ID=your-access-key-id
+export AWS_SECRET_ACCESS_KEY=your-AWS-secret-access-key
+```
 4. Run the following command to launch Django on your local computer:
 ```
 python manage.py runserver

@@ -83,8 +83,12 @@ def unload_pic(request):
     }))  
 
 # S3 upload
-def sign_s3(request):    
+def sign_s3(request): 
     S3_BUCKET = os.environ.get('S3_BUCKET')
+    if not S3_BUCKET:
+        S3_BUCKET = 'oeg-pictures'
+    print(S3_BUCKET)
+    logging.info('s3_sign::S3_BUCKET' + S3_BUCKET)
 
     file_name =  request.GET.get('file_name')
     file_type = "image/jpeg" # request.args.get('file_type')
