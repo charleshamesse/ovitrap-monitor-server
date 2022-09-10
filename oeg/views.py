@@ -17,6 +17,7 @@ from django.views.decorators.http import require_POST
 from django.middleware.csrf import get_token
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Permission
 
 from .egg_counter import EggCounter
 
@@ -153,6 +154,24 @@ def register_view(request):
 
     try:
         user = User.objects.create_user(username, email, password)
+        # add basic permissions
+        codenames_permissions = ['add_record',
+            'change_record',
+            'delete_record',
+            'view_record',
+            'add_capture',
+            'change_capture',
+            'delete_capture',
+            'view_capture',
+            'add_station',
+            'change_station',
+            'delete_station',
+            'view_station']
+        for codename in codenames_permissions:
+            try:
+                user.user_permissions.add(Permission.objects.get(codename=codename))
+            except: 
+                return JsonResponse({'detail': 'Error:' + codename}, status=400)
         user.save()
     except Exception as e:
         return JsonResponse({'detail': 'Error:' + e.__str__()}, status=400)
